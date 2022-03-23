@@ -1,44 +1,46 @@
-package com.digitals.realpokemonapp
+package com.digitals.realpokemonapp.presentation
 
 import android.os.Bundle
+import android.util.Log
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.digitals.realpokemonapp.adapter.PokemonAdapter
 import com.digitals.realpokemonapp.databinding.ActivityMainBinding
-import com.digitals.realpokemonapp.mock.pokemonList
-import com.digitals.realpokemonapp.model.Pokemon
+import com.digitals.realpokemonapp.mock.PokemonUiList
+import com.digitals.realpokemonapp.presentation.adapter.PokemonAdapter
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private val pokemonAdapter = PokemonAdapter()
+
+    private val viewModel: PokemonViewModel by viewModels {
+        PokemonViewModelFactory(this@MainActivity)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val pokemonAdapter = PokemonAdapter()
         binding.pokemonRecyclerView.apply {
             layoutManager = GridLayoutManager(this@MainActivity, 2)
             adapter = pokemonAdapter
+            initTouchListener(pokemonAdapter)
         }
-        pokemonAdapter.submitList(pokemonList)
-        initTouchListener(pokemonAdapter)
+
+        viewModel.loadPokemon()
+
+        viewModel.pokemonData.observe(this) { listPokemon ->
+            Log.e("TAG", "onCreate: ${listPokemon.size}", )
+            pokemonAdapter.submitList(listPokemon)
+            binding.pokemonSwipeToRefresh.isRefreshing = false
+        }
 
         binding.pokemonSwipeToRefresh.setOnRefreshListener {
-            pokemonList.add(
-                0,
-                Pokemon(
-                    "Squirtle",
-                    "https://assets.pokemon.com/assets/cms2/img/pokedex/full/007.png",
-                    R.color.teal_700
-                )
-            )
-            pokemonAdapter.notifyItemInserted(0)
-            binding.pokemonSwipeToRefresh.isRefreshing = false
-            binding.pokemonRecyclerView.smoothScrollToPosition(0)
+            viewModel.addPokemon()
         }
     }
 
@@ -54,15 +56,15 @@ class MainActivity : AppCompatActivity() {
             ): Boolean {
                 val oldPosition = viewHolder.adapterPosition
                 val newPosition = target.adapterPosition
-                pokemonList.add(newPosition, pokemonList[oldPosition])
-                pokemonList.removeAt(oldPosition)
+                PokemonUiList.add(newPosition, PokemonUiList[oldPosition])
+                PokemonUiList.removeAt(oldPosition)
                 pokemonAdapter.notifyItemMoved(newPosition, oldPosition)
                 return true
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
-                pokemonList.removeAt(position)
+                PokemonUiList.removeAt(position)
                 pokemonAdapter.notifyItemRemoved(position)
             }
         }

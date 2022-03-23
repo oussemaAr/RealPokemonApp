@@ -1,37 +1,37 @@
 package com.digitals.realpokemonapp.mock
 
 import com.digitals.realpokemonapp.R
-import com.digitals.realpokemonapp.model.Pokemon
+import com.digitals.realpokemonapp.presentation.model.PokemonUi
 
-val pokemonList = mutableListOf(
-    Pokemon(
+val PokemonUiList = mutableListOf(
+    PokemonUi(
         "Bulbasaur",
-        "https://assets.pokemon.com/assets/cms2/img/pokedex/full/001.png",
+        "https://assets.PokemonUi.com/assets/cms2/img/pokedex/full/001.png",
         R.color.teal_700
     ),
-    Pokemon(
+    PokemonUi(
         "Ivysaur",
-        "https://assets.pokemon.com/assets/cms2/img/pokedex/full/002.png",
+        "https://assets.PokemonUi.com/assets/cms2/img/pokedex/full/002.png",
         R.color.teal_700
     ),
-    Pokemon(
+    PokemonUi(
         "Venusaur",
-        "https://assets.pokemon.com/assets/cms2/img/pokedex/full/003.png",
+        "https://assets.PokemonUi.com/assets/cms2/img/pokedex/full/003.png",
         R.color.teal_700
     ),
-    Pokemon(
+    PokemonUi(
         "Charmander",
-        "https://assets.pokemon.com/assets/cms2/img/pokedex/full/004.png",
+        "https://assets.PokemonUi.com/assets/cms2/img/pokedex/full/004.png",
         R.color.teal_700
     ),
-    Pokemon(
+    PokemonUi(
         "Charmeleon",
-        "https://assets.pokemon.com/assets/cms2/img/pokedex/full/005.png",
+        "https://assets.PokemonUi.com/assets/cms2/img/pokedex/full/005.png",
         R.color.teal_700
     ),
-    Pokemon(
+    PokemonUi(
         "Charizard",
-        "https://assets.pokemon.com/assets/cms2/img/pokedex/full/006.png",
+        "https://assets.PokemonUi.com/assets/cms2/img/pokedex/full/006.png",
         R.color.teal_700
     ),
 )

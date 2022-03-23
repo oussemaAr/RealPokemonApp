@@ -1,4 +1,4 @@
-package com.digitals.realpokemonapp.adapter
+package com.digitals.realpokemonapp.presentation.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,10 +6,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.digitals.realpokemonapp.databinding.PokemonItemBinding
-import com.digitals.realpokemonapp.model.Pokemon
-import com.digitals.realpokemonapp.model.PokemonDiffUtils
+import com.digitals.realpokemonapp.presentation.model.PokemonUi
+import com.digitals.realpokemonapp.presentation.model.PokemonDiffUtils
 
-class PokemonAdapter : ListAdapter<Pokemon, PokemonAdapter.PokemonViewHolder>(PokemonDiffUtils) {
+class PokemonAdapter : ListAdapter<PokemonUi, PokemonAdapter.PokemonViewHolder>(PokemonDiffUtils) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PokemonViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -25,7 +25,7 @@ class PokemonAdapter : ListAdapter<Pokemon, PokemonAdapter.PokemonViewHolder>(Po
     inner class PokemonViewHolder(private val pokemonItemBinding: PokemonItemBinding) :
         RecyclerView.ViewHolder(pokemonItemBinding.root) {
 
-        fun bind(pokemon: Pokemon) {
+        fun bind(pokemon: PokemonUi) {
             pokemonItemBinding.title.text = pokemon.name
             pokemonItemBinding.pokemonImageView.load(pokemon.imageUrl)
         }
