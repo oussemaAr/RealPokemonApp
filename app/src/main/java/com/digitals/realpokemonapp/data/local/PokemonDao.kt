@@ -25,4 +25,7 @@ interface PokemonDao {
 
     @Query("DELETE FROM pokemon_table WHERE id = :id")
     suspend fun deletePokemonById(id: Int)
+
+    @Query("DELETE FROM pokemon_table WHERE pokemon_name like :name")
+    suspend fun deletePokemonByName(name: String)
 }

@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.digitals.realpokemonapp.databinding.ActivityMainBinding
 import com.digitals.realpokemonapp.mock.PokemonUiList
 import com.digitals.realpokemonapp.presentation.adapter.PokemonAdapter
+import com.digitals.realpokemonapp.presentation.model.PokemonUi
+import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
 
@@ -34,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         viewModel.loadPokemon()
 
         viewModel.pokemonData.observe(this) { listPokemon ->
-            Log.e("TAG", "onCreate: ${listPokemon.size}", )
+            Log.e("TAG", "onCreate: ${listPokemon.size}")
             pokemonAdapter.submitList(listPokemon)
             binding.pokemonSwipeToRefresh.isRefreshing = false
         }
@@ -56,19 +58,27 @@ class MainActivity : AppCompatActivity() {
             ): Boolean {
                 val oldPosition = viewHolder.adapterPosition
                 val newPosition = target.adapterPosition
-                PokemonUiList.add(newPosition, PokemonUiList[oldPosition])
-                PokemonUiList.removeAt(oldPosition)
+                pokemonAdapter.currentList.add(newPosition, PokemonUiList[oldPosition])
+                pokemonAdapter.currentList.removeAt(oldPosition)
                 pokemonAdapter.notifyItemMoved(newPosition, oldPosition)
                 return true
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
-                PokemonUiList.removeAt(position)
-                pokemonAdapter.notifyItemRemoved(position)
+                val pokemon = pokemonAdapter.currentList[position]
+                viewModel.removePokemon(pokemon.name)
+                callUndoAction(position, pokemon)
             }
         }
 
         ItemTouchHelper(touchHelper).attachToRecyclerView(binding.pokemonRecyclerView)
+    }
+
+    private fun callUndoAction(position: Int, pokemonUi: PokemonUi) {
+        Snackbar.make(binding.root, "Want to undo the deletion action ?", Snackbar.LENGTH_LONG)
+            .setAction("Undo") {
+                viewModel.addPokemon(pokemonUi)
+            }.show()
     }
 }

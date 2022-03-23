@@ -9,7 +9,6 @@ import com.digitals.realpokemonapp.data.local.PokemonMapper
 import com.digitals.realpokemonapp.mock.PokemonUiList
 import com.digitals.realpokemonapp.presentation.model.PokemonUi
 import kotlinx.coroutines.launch
-import kotlin.random.Random
 
 class PokemonViewModel(private val pokemonDao: PokemonDao) : ViewModel() {
 
@@ -27,8 +26,18 @@ class PokemonViewModel(private val pokemonDao: PokemonDao) : ViewModel() {
         pokemonDao.insertPokemon(
             PokemonMapper().pokemonUiToEntity(PokemonUiList[rand])
         )
-        _pokemonData.value = pokemonDao.getAllPokemon().map {
-            PokemonMapper().pokemonEntityToUi(it)
-        }
+        loadPokemon()
+    }
+
+    fun addPokemon(pokemon: PokemonUi) = viewModelScope.launch {
+        pokemonDao.insertPokemon(
+            PokemonMapper().pokemonUiToEntity(pokemon)
+        )
+        loadPokemon()
+    }
+
+    fun removePokemon(name: String) = viewModelScope.launch {
+        pokemonDao.deletePokemonByName(name)
+        loadPokemon()
     }
 }
