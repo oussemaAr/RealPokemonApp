@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
             initTouchListener(pokemonAdapter)
         }
 
-        viewModel.loadPokemon()
+        viewModel.loadPokemonFromNetwork()
 
         viewModel.pokemonData.observe(this) { listPokemon ->
             Log.e("TAG", "onCreate: ${listPokemon.size}")
@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.pokemonSwipeToRefresh.setOnRefreshListener {
-            viewModel.addPokemon()
+            viewModel.loadPokemonFromNetwork()
         }
     }
 
@@ -68,14 +68,14 @@ class MainActivity : AppCompatActivity() {
                 val position = viewHolder.adapterPosition
                 val pokemon = pokemonAdapter.currentList[position]
                 viewModel.removePokemon(pokemon.name)
-                callUndoAction(position, pokemon)
+                callUndoAction(pokemon)
             }
         }
 
         ItemTouchHelper(touchHelper).attachToRecyclerView(binding.pokemonRecyclerView)
     }
 
-    private fun callUndoAction(position: Int, pokemonUi: PokemonUi) {
+    private fun callUndoAction(pokemonUi: PokemonUi) {
         Snackbar.make(binding.root, "Want to undo the deletion action ?", Snackbar.LENGTH_LONG)
             .setAction("Undo") {
                 viewModel.addPokemon(pokemonUi)
